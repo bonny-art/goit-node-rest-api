@@ -61,3 +61,22 @@ export const updateContact = async (req, res, next) => {
     next(err);
   }
 };
+
+export const updateStatusContact = async (req, res, next) => {
+  try {
+    if (!Object.keys(req.body).includes("favorite")) {
+      throw HttpError(400, "No property 'favorite'");
+    }
+    const newContact = await ContactsService.updateContact(
+      req.params.contactId,
+      req.body
+    );
+
+    if (!newContact) {
+      throw HttpError(404, "Not found");
+    }
+    res.status(200).json(newContact);
+  } catch (err) {
+    next(err);
+  }
+};
