@@ -21,4 +21,6 @@ app.use((err, req, res, next) => {
   res.status(status).json({ message });
 });
 
-export default app;
+app.listen(8080, () => {
+  console.log("Server is running. Use our API on port: 8080");
+});
