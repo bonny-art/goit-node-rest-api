@@ -19,22 +19,22 @@ const contactsRouter = express.Router();
 
 contactsRouter.get("/", getAllContacts);
 
-contactsRouter.get("/:contactId", validateID(), getOneContact);
+contactsRouter.get("/:contactId", validateID, getOneContact);
 
-contactsRouter.delete("/:contactId", validateID(), deleteContact);
+contactsRouter.delete("/:contactId", validateID, deleteContact);
 
 contactsRouter.post("/", validateBody(createContactSchema), createContact);
 
 contactsRouter.put(
   "/:contactId",
-  validateID(),
+  validateID,
   validateBody(updateContactSchema),
   updateContact
 );
 
 contactsRouter.patch(
   "/:contactId/favorite",
-  validateID(),
+  validateID,
   validateBody(updateContactSchema),
   updateStatusContact
 );
