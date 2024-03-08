@@ -24,3 +24,37 @@ export const createUser = async (req, res, next) => {
     next(error);
   }
 };
+
+export const loginUser = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const normalizedEmail = email.toLowerCase();
+
+    const user = await usersServ.isUserExistant(normalizedEmail);
+
+    if (!user) {
+      throw HttpError(401, "Email or password is wrong");
+    }
+
+    const isPasswordValid = await usersServ.isPasswordValid(
+      password,
+      user.password
+    );
+
+    if (!isPasswordValid) {
+      throw HttpError(401, "Email or password is wrong");
+    }
+
+    const loggedInUser = await usersServ.loginUser(user);
+
+    res.status(200).send({
+      token: loggedInUser.token,
+      user: {
+        email: loggedInUser.email,
+        subscription: loggedInUser.subscription,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};

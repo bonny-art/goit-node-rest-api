@@ -25,10 +25,19 @@ export const createUser = async ({ email, password }) => {
   return user;
 };
 
-// const token = await createToken(user._id);
+export const isPasswordValid = async (password, hashedPassword) => {
+  const isValid = await bcryptjs.compare(password, hashedPassword);
+  return isValid;
+};
 
-// const newUser = await User.findByIdAndUpdate(
-//   user._id,
-//   { token },
-//   { new: true }
-// );
+export const loginUser = async (user) => {
+  const token = await createToken(user._id);
+
+  const loggedInUser = await User.findByIdAndUpdate(
+    user._id,
+    { token },
+    { new: true }
+  );
+
+  return user;
+};
