@@ -46,6 +46,7 @@ export const loginUser = async (req, res, next) => {
     }
 
     const loggedInUser = await usersServ.loginUser(user);
+    console.log("🚀 ~ loggedInUser in controllers:", loggedInUser);
 
     res.status(200).send({
       token: loggedInUser.token,

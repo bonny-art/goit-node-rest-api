@@ -8,10 +8,16 @@ export const isUserExistant = async (email) => {
   return user;
 };
 
+export const getUserById = async (id) => {
+  const user = await User.findById(id);
+  return user;
+};
+
 const createToken = async (id) => {
   const payload = { id };
   const { SECRET_KEY } = process.env;
-  const token = jwt.sign(payload, SECRET_KEY);
+  const lifeLength = { expiresIn: "7d" };
+  const token = jwt.sign(payload, SECRET_KEY, lifeLength);
 
   return token;
 };
@@ -32,12 +38,14 @@ export const isPasswordValid = async (password, hashedPassword) => {
 
 export const loginUser = async (user) => {
   const token = await createToken(user._id);
+  console.log("🚀 ~ token created in services:", token);
 
   const loggedInUser = await User.findByIdAndUpdate(
     user._id,
     { token },
     { new: true }
   );
+  console.log("🚀 ~ loggedInUser in services:", loggedInUser);
 
-  return user;
+  return loggedInUser;
 };

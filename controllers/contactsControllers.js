@@ -3,6 +3,8 @@ import HttpError from "../helpers/HttpError.js";
 import * as ContactsService from "../services/contactsServices.js";
 
 export const getAllContacts = async (req, res) => {
+  console.log("🚀 ~ req.user contacts controller:", req.user);
+
   try {
     const contacts = await ContactsService.listContacts();
     res.status(200).json(contacts);
