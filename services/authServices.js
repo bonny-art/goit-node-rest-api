@@ -18,6 +18,7 @@ export const auth = async (req, res, next) => {
       throw HttpError(401, "Not authorized");
     }
 
+    var reqUserId = "";
     jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
       if (err) {
         if (err.name === "TokenExpiredError") {
@@ -26,24 +27,22 @@ export const auth = async (req, res, next) => {
 
         throw HttpError(401, "Not authorized");
       }
-
-      req.user = {
-        id: decoded.id,
-      };
+      reqUserId = decoded.id;
     });
 
-    const reqUser = req.user;
-    const user = await getUserById(reqUser.id);
+    const user = await getUserById(reqUserId);
 
     if (!user) {
-      delete req.user;
-      throw HttpError(401, "Not authorized - no such user");
+      throw HttpError(401, "Not authorized");
     }
 
     if (token !== user.token) {
-      delete req.user;
-      throw HttpError(401, "Not authorized - token doesn`t match");
+      throw HttpError(401, "Not authorized");
     }
+
+    req.user = {
+      id: reqUserId,
+    };
 
     next();
   } catch (error) {
