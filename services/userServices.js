@@ -38,14 +38,23 @@ export const isPasswordValid = async (password, hashedPassword) => {
 
 export const loginUser = async (user) => {
   const token = await createToken(user._id);
-  console.log("🚀 ~ token created in services:", token);
 
   const loggedInUser = await User.findByIdAndUpdate(
     user._id,
     { token },
     { new: true }
   );
-  console.log("🚀 ~ loggedInUser in services:", loggedInUser);
 
   return loggedInUser;
+};
+
+export const logoutUser = async (userId) => {
+  await User.findByIdAndUpdate(userId, { token: null }, { new: true });
+
+  return "";
+};
+
+export const getCurrentUser = async (userId) => {
+  const user = await User.findById(userId);
+  return user;
 };

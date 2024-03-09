@@ -46,7 +46,6 @@ export const loginUser = async (req, res, next) => {
     }
 
     const loggedInUser = await usersServ.loginUser(user);
-    console.log("🚀 ~ loggedInUser in controllers:", loggedInUser);
 
     res.status(200).send({
       token: loggedInUser.token,
@@ -55,6 +54,27 @@ export const loginUser = async (req, res, next) => {
         subscription: loggedInUser.subscription,
       },
     });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const logoutUser = async (req, res, next) => {
+  try {
+    await usersServ.logoutUser(req.user.id);
+
+    res.status(204).end();
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getCurrentUser = async (req, res, next) => {
+  try {
+    const currentUser = await usersServ.getCurrentUser(req.user.id);
+    const { email, subscription } = currentUser;
+
+    res.status(200).send({ email, subscription });
   } catch (error) {
     next(error);
   }
