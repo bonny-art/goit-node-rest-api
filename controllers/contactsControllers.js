@@ -7,7 +7,7 @@ export const getAllContacts = async (req, res) => {
     const contacts = await ContactsService.listContacts(req.user.id);
     res.status(200).json(contacts);
   } catch (error) {
-    console.log(error);
+    next(error);
   }
 };
 
