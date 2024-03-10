@@ -22,7 +22,7 @@ const usersRouter = express.Router();
 
 usersRouter.post("/register", validateBody(createUserSchema), createUser);
 usersRouter.post("/login", validateBody(loginUserSchema), loginUser);
-usersRouter.get("/logout", auth, logoutUser);
+usersRouter.post("/logout", auth, logoutUser);
 usersRouter.get("/current", auth, getCurrentUser);
 usersRouter.patch("/", auth, validateBody(updateUserSchema), updateUser);
 

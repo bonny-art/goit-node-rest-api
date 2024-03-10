@@ -35,7 +35,7 @@ export async function listContacts(query, page, limit) {
 }
 
 export async function getContactByIdAndOwner(contactId, userID) {
-  const contact = await Contact.find({ _id: contactId, owner: userID });
+  const contact = await Contact.findOne({ _id: contactId, owner: userID });
   return contact;
 }
 
@@ -45,7 +45,7 @@ export async function removeContact(contactId) {
 }
 
 export async function isContactExisting(name, owner) {
-  const existingContact = await Contact.find({ name, owner });
+  const existingContact = await Contact.findOne({ name, owner });
 
   return existingContact;
 }

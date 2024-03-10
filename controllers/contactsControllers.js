@@ -28,7 +28,7 @@ export const getContacts = async (req, res, next) => {
 
 export const getOneContact = async (req, res, next) => {
   try {
-    const [contact] = await ContactsService.getContactByIdAndOwner(
+    const contact = await ContactsService.getContactByIdAndOwner(
       req.params.contactId,
       req.user.id
     );
@@ -44,7 +44,7 @@ export const getOneContact = async (req, res, next) => {
 
 export const deleteContact = async (req, res, next) => {
   try {
-    const [contact] = await ContactsService.getContactByIdAndOwner(
+    const contact = await ContactsService.getContactByIdAndOwner(
       req.params.contactId,
       req.user.id
     );
@@ -64,7 +64,7 @@ export const deleteContact = async (req, res, next) => {
 
 export const createContact = async (req, res, next) => {
   try {
-    const [isContactExisting] = await ContactsService.isContactExisting(
+    const isContactExisting = await ContactsService.isContactExisting(
       req.body.name,
       req.user.id
     );
@@ -88,7 +88,7 @@ export const updateContact = async (req, res, next) => {
       throw HttpError(400, "Body must have at least one field");
     }
 
-    const [contact] = await ContactsService.getContactByIdAndOwner(
+    const contact = await ContactsService.getContactByIdAndOwner(
       req.params.contactId,
       req.user.id
     );
@@ -114,7 +114,7 @@ export const updateStatusContact = async (req, res, next) => {
       throw HttpError(400, "No property 'favorite'");
     }
 
-    const [contact] = await ContactsService.getContactByIdAndOwner(
+    const contact = await ContactsService.getContactByIdAndOwner(
       req.params.contactId,
       req.user.id
     );
