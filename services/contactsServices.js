@@ -1,7 +1,6 @@
 import { Contact } from "../db/models/Contact.js";
 
 export async function listAllContacts(query) {
-  console.log("all");
   const totalContacts = await Contact.countDocuments(query);
   const contacts = await Contact.find(query);
   return {
