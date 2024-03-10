@@ -1,30 +1,38 @@
 import { Contact } from "../db/models/Contact.js";
 
-export async function listAllContacts(userId) {
-  const totalContacts = await Contact.countDocuments({ owner: userId });
-  const contacts = await Contact.find({ owner: userId });
+export async function listAllContacts(query) {
+  console.log("all");
+  const totalContacts = await Contact.countDocuments(query);
+  const contacts = await Contact.find(query);
   return {
-    page: "All",
+    page: 1,
     limit: "All",
-    totalPages: "All",
+    totalPages: 1,
+    itemsOnPage: totalContacts,
     totalItems: totalContacts,
     contacts,
   };
 }
 
-export async function listContacts(userId, query) {
-  const totalContacts = await Contact.countDocuments({ owner: userId });
-
-  const page = parseInt(query.page, 10) || 1;
-  const limit = parseInt(query.limit, 10) || 5;
-
-  const skip = (page - 1) * limit;
+export async function listContacts(query, page, limit) {
+  const totalContacts = await Contact.countDocuments(query);
   const totalPages = Math.ceil(totalContacts / limit);
 
-  const contacts = await Contact.find({ owner: userId })
-    .skip(skip)
-    .limit(limit);
-  return { page, limit, totalPages, totalItems: totalContacts, contacts };
+  if (page > totalPages) {
+    page = totalPages;
+  }
+
+  const skip = (page - 1) * limit;
+
+  const contacts = await Contact.find(query).skip(skip).limit(limit);
+  return {
+    page,
+    limit,
+    totalPages,
+    itemsOnPage: contacts.length,
+    totalItems: totalContacts,
+    contacts,
+  };
 }
 
 export async function getContactByIdAndOwner(contactId, userID) {

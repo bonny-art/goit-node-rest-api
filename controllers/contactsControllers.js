@@ -4,11 +4,20 @@ import * as ContactsService from "../services/contactsServices.js";
 
 export const getContacts = async (req, res, next) => {
   try {
+    const query = { owner: req.user.id };
+
+    if (req.query.favorite) {
+      query.favorite = req.query.favorite === "true";
+    }
+
     var data;
     if (req.query.page && req.query.limit) {
-      data = await ContactsService.listContacts(req.user.id, req.query);
+      const page = parseInt(req.query.page, 10) || 1;
+      const limit = parseInt(req.query.limit, 10) || 5;
+
+      data = await ContactsService.listContacts(query, page, limit);
     } else {
-      data = await ContactsService.listAllContacts(req.user.id);
+      data = await ContactsService.listAllContacts(query);
     }
 
     res.status(200).json(data);
