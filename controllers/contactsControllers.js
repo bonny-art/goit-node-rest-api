@@ -2,10 +2,16 @@ import HttpError from "../helpers/HttpError.js";
 
 import * as ContactsService from "../services/contactsServices.js";
 
-export const getAllContacts = async (req, res) => {
+export const getContacts = async (req, res, next) => {
   try {
-    const contacts = await ContactsService.listContacts(req.user.id);
-    res.status(200).json(contacts);
+    var data;
+    if (req.query.page && req.query.limit) {
+      data = await ContactsService.listContacts(req.user.id, req.query);
+    } else {
+      data = await ContactsService.listAllContacts(req.user.id);
+    }
+
+    res.status(200).json(data);
   } catch (error) {
     next(error);
   }
@@ -48,14 +54,19 @@ export const deleteContact = async (req, res, next) => {
 };
 
 export const createContact = async (req, res, next) => {
-  const { name, email, phone } = req.body;
   try {
-    const contact = await ContactsService.addContact(
-      name,
-      email,
-      phone,
+    const [isContactExisting] = await ContactsService.isContactExisting(
+      req.body.name,
       req.user.id
     );
+    if (isContactExisting) {
+      throw HttpError(
+        409,
+        `Contact with name ${req.body.name} is already in phonebook`
+      );
+    }
+
+    const contact = await ContactsService.addContact(req.body, req.user.id);
     res.status(201).json(contact);
   } catch (error) {
     next(error);

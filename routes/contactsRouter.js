@@ -9,7 +9,7 @@ import {
 } from "../schemas/contactsSchemas.js";
 
 import {
-  getAllContacts,
+  getContacts,
   getOneContact,
   deleteContact,
   createContact,
@@ -19,7 +19,7 @@ import {
 
 const contactsRouter = express.Router();
 
-contactsRouter.get("/", getAllContacts);
+contactsRouter.get("/", getContacts);
 
 contactsRouter.get("/:contactId", validateID, getOneContact);
 
