@@ -79,3 +79,17 @@ export const getCurrentUser = async (req, res, next) => {
     next(error);
   }
 };
+
+export const updateUser = async (req, res, next) => {
+  try {
+    if (!Object.keys(req.body).length) {
+      throw HttpError(400, "Body must have at least one field");
+    }
+
+    const newUser = await usersServ.updateUser(req.user.id, req.body);
+
+    res.status(200).json(newUser);
+  } catch (error) {
+    next(error);
+  }
+};

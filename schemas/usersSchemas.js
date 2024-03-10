@@ -12,3 +12,9 @@ export const loginUserSchema = Joi.object({
   password: Joi.string().required(),
   email: Joi.string().email().required(),
 });
+
+export const updateUserSchema = Joi.object({
+  subscription: Joi.string()
+    .valid("starter", "pro", "business")
+    .default("starter"),
+});
