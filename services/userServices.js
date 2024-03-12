@@ -63,5 +63,6 @@ export const updateUser = async (userId, newUserInfo) => {
   const updatedUser = await User.findByIdAndUpdate(userId, newUserInfo, {
     new: true,
   });
+
   return updatedUser;
 };

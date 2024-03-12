@@ -1,5 +1,7 @@
-import HttpError from "../helpers/HttpError.js";
+import fs from "fs/promises";
+import path from "path";
 
+import HttpError from "../helpers/HttpError.js";
 import * as usersServ from "../services/userServices.js";
 
 export const createUser = async (req, res, next) => {
@@ -96,8 +98,21 @@ export const updateUser = async (req, res, next) => {
 
 export const uploadAvatar = async (req, res, next) => {
   try {
-    res.send("avatar changing");
+    if (!req.file) {
+      throw HttpError(400, "Select an avatar file to upload");
+    }
+
+    fs.rename(
+      req.file.path,
+      path.join(process.cwd(), "public/avatars", req.file.filename)
+    );
+
+    console.log("req.file :>> ", req.file);
+    const newUser = await usersServ.updateUser(req.user.id, {
+      avatarURL: `/avatars/${req.file.filename}`,
+    });
+    res.send(newUser);
   } catch (error) {
-    nexn(error);
+    next(error);
   }
 };
