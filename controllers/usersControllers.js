@@ -93,3 +93,11 @@ export const updateUser = async (req, res, next) => {
     next(error);
   }
 };
+
+export const uploadAvatar = async (req, res, next) => {
+  try {
+    res.send("avatar changing");
+  } catch (error) {
+    nexn(error);
+  }
+};
