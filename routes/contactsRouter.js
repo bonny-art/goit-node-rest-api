@@ -1,6 +1,15 @@
 import express from "express";
+
+import validateBody from "../helpers/validateBody.js";
+import validateID from "../helpers/validateID.js";
+
 import {
-  getAllContacts,
+  createContactSchema,
+  updateContactSchema,
+} from "../schemas/contactsSchemas.js";
+
+import {
+  getContacts,
   getOneContact,
   deleteContact,
   createContact,
@@ -17,7 +26,7 @@ import validateID from "../helpers/validateID.js";
 
 const contactsRouter = express.Router();
 
-contactsRouter.get("/", getAllContacts);
+contactsRouter.get("/", getContacts);
 
 contactsRouter.get("/:contactId", validateID, getOneContact);
 
