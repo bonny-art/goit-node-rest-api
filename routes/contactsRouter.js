@@ -16,6 +16,13 @@ import {
   updateContact,
   updateStatusContact,
 } from "../controllers/contactsControllers.js";
+import validateBody from "../helpers/validateBody.js";
+
+import {
+  createContactSchema,
+  updateContactSchema,
+} from "../schemas/contactsSchemas.js";
+import validateID from "../helpers/validateID.js";
 
 const contactsRouter = express.Router();
 

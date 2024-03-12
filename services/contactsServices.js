@@ -1,5 +1,6 @@
 import { Contact } from "../db/models/Contact.js";
 
+
 export async function listAllContacts(query) {
   const totalContacts = await Contact.countDocuments(query);
   const contacts = await Contact.find(query);
@@ -36,6 +37,7 @@ export async function listContacts(query, page, limit) {
 
 export async function getContactByIdAndOwner(contactId, userID) {
   const contact = await Contact.findOne({ _id: contactId, owner: userID });
+
   return contact;
 }
 
@@ -43,6 +45,7 @@ export async function removeContact(contactId) {
   const contact = await Contact.findByIdAndDelete(contactId);
   return contact;
 }
+
 
 export async function isContactExisting(name, owner) {
   const existingContact = await Contact.findOne({ name, owner });
@@ -52,6 +55,7 @@ export async function isContactExisting(name, owner) {
 
 export async function addContact({ name, email, phone }, owner) {
   const newContact = new Contact({ name, email, phone, owner });
+
   const contact = await newContact.save();
   return contact;
 }
