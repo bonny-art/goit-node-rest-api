@@ -104,12 +104,13 @@ export const uploadAvatar = async (req, res, next) => {
 
     fs.rename(
       req.file.path,
-      path.join(process.cwd(), "public/avatars", req.file.filename)
+      path.join(process.cwd(), "public", "avatars", req.file.filename)
     );
 
     console.log("req.file :>> ", req.file);
+    const avatarURL = path.join("avatars", req.file.filename);
     const newUser = await usersServ.updateUser(req.user.id, {
-      avatarURL: `/avatars/${req.file.filename}`,
+      avatarURL,
     });
     res.send(newUser);
   } catch (error) {
