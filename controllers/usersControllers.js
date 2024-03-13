@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
+import gravatar from "gravatar";
 
 import HttpError from "../helpers/HttpError.js";
 import * as usersServ from "../services/userServices.js";
@@ -12,10 +13,18 @@ export const createUser = async (req, res, next) => {
     if (user) {
       throw HttpError(409, "Email in use");
     }
+
+    const avatarURL = gravatar.url(email);
+    console.log("🚀 ~ avatar:", avatarURL);
+
     const newUser = await usersServ.createUser({
       ...req.body,
       email: normalizedEmail,
+      avatarURL,
     });
+
+    console.log("🚀 ~ newUser:", newUser);
+
     res.status(201).send({
       user: {
         email: newUser.email,
@@ -107,7 +116,6 @@ export const uploadAvatar = async (req, res, next) => {
       path.join(process.cwd(), "public", "avatars", req.file.filename)
     );
 
-    console.log("req.file :>> ", req.file);
     const avatarURL = path.join("avatars", req.file.filename);
     const newUser = await usersServ.updateUser(req.user.id, {
       avatarURL,

@@ -10,7 +10,7 @@ const app = express();
 app.use(morgan("tiny"));
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(process.cwd(), "public")));
+app.use(express.static("public"));
 
 app.use("/api", routes);
 

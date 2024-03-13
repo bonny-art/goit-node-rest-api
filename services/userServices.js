@@ -22,10 +22,10 @@ const createToken = async (id) => {
   return token;
 };
 
-export const createUser = async ({ email, password }) => {
+export const createUser = async ({ email, password, avatarURL }) => {
   const hashedPassword = await bcryptjs.hash(password, 10);
 
-  const user = new User({ email, password: hashedPassword });
+  const user = new User({ email, password: hashedPassword, avatarURL });
   await user.save();
 
   return user;
