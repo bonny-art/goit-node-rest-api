@@ -4,6 +4,7 @@ import gravatar from "gravatar";
 
 import HttpError from "../helpers/HttpError.js";
 import * as usersServ from "../services/userServices.js";
+import { resizeImage } from "../services/imageServices.js";
 
 export const createUser = async (req, res, next) => {
   try {
@@ -15,15 +16,12 @@ export const createUser = async (req, res, next) => {
     }
 
     const avatarURL = gravatar.url(email);
-    console.log("🚀 ~ avatar:", avatarURL);
 
     const newUser = await usersServ.createUser({
       ...req.body,
       email: normalizedEmail,
       avatarURL,
     });
-
-    console.log("🚀 ~ newUser:", newUser);
 
     res.status(201).send({
       user: {
@@ -110,6 +108,8 @@ export const uploadAvatar = async (req, res, next) => {
     if (!req.file) {
       throw HttpError(400, "Select an avatar file to upload");
     }
+
+    await resizeImage(req.file.path, 250, 250);
 
     fs.rename(
       req.file.path,
