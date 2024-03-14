@@ -117,10 +117,10 @@ export const uploadAvatar = async (req, res, next) => {
     );
 
     const avatarURL = path.join("avatars", req.file.filename);
-    const newUser = await usersServ.updateUser(req.user.id, {
+    await usersServ.updateUser(req.user.id, {
       avatarURL,
     });
-    res.send(newUser);
+    res.send({ avatarURL });
   } catch (error) {
     next(error);
   }
