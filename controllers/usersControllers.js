@@ -1,6 +1,10 @@
-import HttpError from "../helpers/HttpError.js";
+import fs from "fs/promises";
+import path from "path";
+import gravatar from "gravatar";
 
+import HttpError from "../helpers/HttpError.js";
 import * as usersServ from "../services/userServices.js";
+import { resizeImage } from "../services/imageServices.js";
 
 export const createUser = async (req, res, next) => {
   try {
@@ -10,10 +14,15 @@ export const createUser = async (req, res, next) => {
     if (user) {
       throw HttpError(409, "Email in use");
     }
+
+    const avatarURL = gravatar.url(email);
+
     const newUser = await usersServ.createUser({
       ...req.body,
       email: normalizedEmail,
+      avatarURL,
     });
+
     res.status(201).send({
       user: {
         email: newUser.email,
@@ -89,6 +98,29 @@ export const updateUser = async (req, res, next) => {
     const newUser = await usersServ.updateUser(req.user.id, req.body);
 
     res.status(200).json(newUser);
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const uploadAvatar = async (req, res, next) => {
+  try {
+    if (!req.file) {
+      throw HttpError(400, "Select an avatar file to upload");
+    }
+
+    await resizeImage(req.file.path, 250, 250);
+
+    fs.rename(
+      req.file.path,
+      path.join(process.cwd(), "public", "avatars", req.file.filename)
+    );
+
+    const avatarURL = path.join("avatars", req.file.filename);
+    await usersServ.updateUser(req.user.id, {
+      avatarURL,
+    });
+    res.send({ avatarURL });
   } catch (error) {
     next(error);
   }

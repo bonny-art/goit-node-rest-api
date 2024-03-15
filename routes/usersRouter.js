@@ -1,6 +1,7 @@
 import express from "express";
 
 import validateBody from "../helpers/validateBody.js";
+import upload from "../services/uploadServices.js";
 
 import {
   createUserSchema,
@@ -14,6 +15,7 @@ import {
   logoutUser,
   getCurrentUser,
   updateUser,
+  uploadAvatar,
 } from "../controllers/usersControllers.js";
 
 import { auth } from "../services/authServices.js";
@@ -25,5 +27,6 @@ usersRouter.post("/login", validateBody(loginUserSchema), loginUser);
 usersRouter.post("/logout", auth, logoutUser);
 usersRouter.get("/current", auth, getCurrentUser);
 usersRouter.patch("/", auth, validateBody(updateUserSchema), updateUser);
+usersRouter.patch("/avatars", auth, upload.single("avatar"), uploadAvatar);
 
 export default usersRouter;
