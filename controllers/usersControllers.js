@@ -1,6 +1,7 @@
 import fs from "fs/promises";
 import path from "path";
 import gravatar from "gravatar";
+import crypto from "node:crypto";
 
 import HttpError from "../helpers/HttpError.js";
 import * as usersServ from "../services/userServices.js";
@@ -17,18 +18,22 @@ export const createUser = async (req, res, next) => {
 
     const avatarURL = gravatar.url(email);
 
+    const verificationToken = crypto.randomUUID();
+
     const newUser = await usersServ.createUser({
       ...req.body,
       email: normalizedEmail,
       avatarURL,
+      verificationToken,
     });
 
-    res.status(201).send({
-      user: {
-        email: newUser.email,
-        subscription: newUser.subscription,
-      },
-    });
+    req.user = {
+      verificationToken: newUser.verificationToken,
+      email: newUser.email,
+      subscription: newUser.subscription,
+    };
+
+    next();
   } catch (error) {
     next(error);
   }
@@ -121,6 +126,15 @@ export const uploadAvatar = async (req, res, next) => {
       avatarURL,
     });
     res.send({ avatarURL });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const verificateUser = async (req, res, next) => {
+  try {
+    console.log("req.params :>> ", req.params.verificationToken);
+    res.send("Verification");
   } catch (error) {
     next(error);
   }

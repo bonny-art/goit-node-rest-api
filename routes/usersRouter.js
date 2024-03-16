@@ -16,6 +16,7 @@ import {
   getCurrentUser,
   updateUser,
   uploadAvatar,
+  verificateUser,
 } from "../controllers/usersControllers.js";
 
 import { auth } from "../services/authServices.js";
@@ -29,6 +30,8 @@ usersRouter.post(
   createUser,
   sendMail
 );
+usersRouter.get("/verify/:verificationToken", verificateUser);
+
 usersRouter.post("/login", validateBody(loginUserSchema), loginUser);
 usersRouter.post("/logout", auth, logoutUser);
 usersRouter.get("/current", auth, getCurrentUser);
