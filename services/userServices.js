@@ -76,3 +76,9 @@ export const updateUser = async (userId, newUserInfo) => {
 
   return updatedUser;
 };
+
+export const verifyUser = async (verificationToken) => {
+  const user = await User.findOne({ verificationToken });
+
+  return user;
+};

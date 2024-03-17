@@ -40,6 +40,10 @@ export const auth = async (req, res, next) => {
       throw HttpError(401, "Not authorized");
     }
 
+    if (user.verify === false) {
+      throw HttpError(401, "Your email is not verified");
+    }
+
     req.user = {
       id: reqUserId,
     };
