@@ -18,3 +18,7 @@ export const updateUserSchema = Joi.object({
     .valid("starter", "pro", "business")
     .default("starter"),
 });
+
+export const reVerificateUserSchema = Joi.object({
+  email: Joi.string().email().required(),
+});
