@@ -146,7 +146,7 @@ export const verificateUser = async (req, res, next) => {
       throw HttpError(404, "User not found");
     }
 
-    await usersServ.updateUser(user.id, {
+    await usersServ.updateUser(user._id, {
       verify: true,
       verificationToken: null,
     });
@@ -186,7 +186,3 @@ export const reVerificateUser = async (req, res, next) => {
     next(error);
   }
 };
-
-// • Якщо з body все добре, виконуємо повторну відправку листа з verificationToken на вказаний email, але тільки якщо користувач не верифікований
-
-// • Якщо користувач вже пройшов верифікацію відправити json з ключем {"message":"Verification has already been passed"} зі статусом 400 Bad Request
