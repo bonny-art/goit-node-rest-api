@@ -25,5 +25,3 @@ contactsRouter.post("/", validateBody(createContactSchema), createContact);
 contactsRouter.put("/:id", validateBody(updateContactSchema), updateContact);
 
 export default contactsRouter;
-
-//
